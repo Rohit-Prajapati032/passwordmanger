@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Manager</title>
+    <link rel="stylesheet" href="/css/show.css">
+</head>
+
+<body>
+<div class="container">
+    <h2>🔐 Password Manager</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Website</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% if (passwords.length < 1) { %>
+                <tr>
+                    <td colspan="4" style="text-align:center;">No passwords saved yet.</td>
+                </tr>
+            <% } %>
+
+            <% passwords.forEach(password => { %>
+                <tr>
+                    <td><%= password.websiteUrl %></td>
+                    <td><%= password.email %></td>
+                    <td>
+                        <input type="password" value="<%= password.password %>" readonly>
+                        <span class="toggle" onclick="togglePassword(this)">👁️</span>
+                    </td>
+                    <td class="actions">
+                        <a href="/edit/<%= password.id %>">
+                            <button class="edit">Edit</button>
+                        </a>
+                        <form action="/delete/<%= password.id %>?_method=DELETE" method="POST" style="display:inline;">
+                            <button class="delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+function togglePassword(icon) {
+    const input = icon.previousElementSibling;
+    input.type = input.type === "password" ? "text" : "password";
+    icon.textContent = input.type === "password" ? "👁️" : "🙈";
+}
+</script>
+
+</body>
+</html>

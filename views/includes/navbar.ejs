@@ -1,0 +1,11 @@
+<nav>
+    <h1>🔐 PassVault</h1>
+    <div>
+       <% if(!name) { %>
+        <a href="/login">Login</a>
+      <% } %>
+      <% if(name) { %>
+        <a href="/logout">Logout</a>
+      <% } %>
+    </div>
+  </nav>

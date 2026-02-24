@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Password Manager | Dashboard</title>
+<link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<%- include("includes/navbar") %> 
+
+  <section class="dashboard">
+    <div class="welcome">
+      Welcome back, <span><%= name %></span> 👋
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>➕ Add Password</h3>
+        <p>Securely save your website & app passwords.</p>
+            <a href="/add-user"> 
+              <button>Add Password</button>
+            </a>
+  
+      </div>
+
+      <div class="card">
+        <h3>📂 View Passwords</h3>
+        <p>Manage all your stored credentials safely.</p>
+        <a href="/passwords">
+          <button>View Passwords</button>
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>🛡 Security</h3>
+        <p>Encrypted storage with strong protection.</p>
+       <a href="/security">
+          <button>Learn More</button>
+        </a>  
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
