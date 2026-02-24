@@ -6,8 +6,7 @@ import session from "express-session";
 import methodOverride from "method-override";
 import path from "path";
 import { fileURLToPath } from "url";
-import 'dotenv/config'
-
+import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
@@ -37,7 +36,7 @@ app.use(
 
 // ================== AUTH MIDDLEWARE ==================
 function isLoggedIn(req, res, next) {
-    console.log("Checking authentication for userId:", req.session.userId);
+    // console.log("Checking authentication for userId:", req.session.userId);
     if (!req.session.userId) {
         return res.redirect("/login");
     }
@@ -73,10 +72,10 @@ app.post("/login", async (req, res) => {
         }
 
         const userObj = user[0];
-        console.log(userObj);
+        // console.log(userObj);
 
         const isMatch = await bcrypt.compare(password, userObj.password);
-        console.log("Password Match:", isMatch);
+        // console.log("Password Match:", isMatch);
         if (!isMatch) {
             return res.status(401).send("Invalid password");
         }
@@ -87,13 +86,13 @@ app.post("/login", async (req, res) => {
         req.session.isLoggedIn = true;
 
         req.session.save(() => {
-            console.log("Session saved, redirecting to dashboard...");
+            // console.log("Session saved, redirecting to dashboard...");
             res.redirect("/dashboard");
             console.log("Redirected to dashboard");
         });
 
     } catch (error) {
-        console.error("Login Error:", error);
+        // console.error("Login Error:", error);
         res.status(500).send("Something went wrong");
     }
 });
@@ -151,7 +150,7 @@ app.get("/dashboard", isLoggedIn, async (req, res) => {
             name: req.session.username,
         });
     } catch (err) {
-        console.error(err);
+        // console.error(err);
         res.status(500).send("Dashboard error");
     }
 });
@@ -160,7 +159,7 @@ app.get("/dashboard", isLoggedIn, async (req, res) => {
 app.get("/logout", isLoggedIn, (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            console.error(err);
+            // console.error(err);
             return res.send("Logout error");
         }
         res.redirect("/login");
@@ -183,7 +182,7 @@ app.post("/add-user", isLoggedIn, async (req, res) => {
         res.redirect("/dashboard");
     }
     catch (err) {
-        console.error(err);
+        // console.error(err);
         res.status(500).send("Error adding password");
     }
 });
@@ -196,7 +195,7 @@ app.get("/passwords", isLoggedIn, async (req, res) => {
             "SELECT * FROM passwordsInfos WHERE user_id = ?",
             [user_Id]
         );
-        console.log("Retrieved passwords:", passwords);
+        // console.log("Retrieved passwords:", passwords);
         res.render("show", { passwords });
     } catch (error) {
         console.error(error);
@@ -207,34 +206,34 @@ app.get("/passwords", isLoggedIn, async (req, res) => {
 app.get('/edit/:id', isLoggedIn, async (req, res) => {
     const editId = req.params.id;
     const passwordPost = await connection.query('SELECT * FROM passwordsInfos WHERE id = ?', [editId]);
-    console.log("Password to edit:", passwordPost[0][0]);
+    // console.log("Password to edit:", passwordPost[0][0]);
     res.render('edit', { password: passwordPost[0][0] });
 });
 
 // EDIT PASSWORD LOGIC
 app.patch('/edit', isLoggedIn, async (req, res) => {
     const { id, website, email, password } = req.body;
-    console.log("Updating password with id:", id);
+    // console.log("Updating password with id:", id);
 
     try {
         const q = 'UPDATE passwordsInfos SET websiteUrl = ?, email = ?, password = ? WHERE id = ?';
         await connection.query(q, [website, email, password, id]);
         res.redirect("/passwords");
     } catch (error) {
-        console.error("Error updating password:", error);
+        // console.error("Error updating password:", error);
         res.status(500).send("Error updating password");
     }
 });
 
 app.delete('/delete/:id', isLoggedIn, async (req, res) => {
     const deleteId = req.params.id;
-    console.log("Deleting password with id:", deleteId);
+    // console.log("Deleting password with id:", deleteId);
     try {
         const q = 'DELETE FROM passwordsInfos WHERE id = ?';
         await connection.query(q, [deleteId]);
         res.redirect("/passwords");
     } catch (error) {
-        console.error("Error deleting password:", error);
+        // console.error("Error deleting password:", error);
         res.status(500).send("Error deleting password");
     }
 });
